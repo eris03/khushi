@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Doctor's Portal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Nunito:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Poppins', 'Nunito', Arial, sans-serif;
+    margin: 0; padding: 0;
+    background-color: #ADD8E6; /* Light Blue for landing and login */
+    color: #333;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .landing-container, .login-container {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    text-align: center;
+    font-family: 'Poppins', 'Nunito', Arial, sans-serif;
+    color: #004080;
+    user-select: none;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .landing-container button {
+    background-color: white;
+    color: #007bff;
+    border: 2.5px solid #007bff;
+    padding: 16px 36px;
+    margin: 20px 12px;
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+  }
+  .landing-container button:hover {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 6px 20px rgba(0,123,255,0.6);
+  }
+  .login-container h2 {
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+  .login-container form {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    text-align: left;
+  }
+  .login-container label {
+    font-weight: 600;
+    font-size: 15px;
+    color: #004080;
+    margin-top: 18px;
+    display: block;
+  }
+  .login-container input[type="email"],
+  .login-container input[type="password"],
+  .login-container select {
+    width: 100%;
+    padding: 12px 16px;
+    margin-top: 6px;
+    border: 1.8px solid #ccc;
+    border-radius: 14px;
+    font-size: 16px;
+    font-family: 'Poppins', 'Nunito', Arial, sans-serif;
+    transition: border-color 0.3s ease;
+  }
+  .login-container input[type="email"]:focus,
+  .login-container input[type="password"]:focus,
+  .login-container select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  .login-container button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    margin-top: 30px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(0,86,179,0.6);
+  }
+  .login-container button:hover {
+    background-color: #003d80;
+  }
+  h1, h2, h3, h4 {
+    margin-bottom: 16px;
+  }
+  button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    margin: 10px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  label {
+    display: block;
+    margin: 12px 0 6px;
+    text-align: left;
+  }
+  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  #backArrow {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: left;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  .dashboard-container {
+    display: flex;
+    max-width: 960px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  .profile-section {
+    width: 280px;
+    background: #007bff;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .profile-section h3 {
+    margin-top: 0;
+  }
+  .profile-picture-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #profilePicture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+  }
+  .main-content {
+    flex: 1;
+    padding: 20px 30px;
+    box-sizing: border-box;
+  }
+  .appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .appointments-table th, .appointments-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  .appointments-table th {
+    background-color: #f2f2f2;
+  }
+  #todaySchedule {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 20px;
+  }
+  .event-calendar-section {
+    margin-bottom: 20px;
+  }
+  #calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    user-select: none;
+  }
+  .calendar-header {
+    grid-column: span 7;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .calendar-day-name {
+    font-weight: bold;
+    text-align: center;
+    padding: 6px 0;
+    background: #e9ecef;
+    border-radius: 4px;
+  }
+  .calendar-date {
+    text-align: center;
+    padding: 10px 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .calendar-date:hover {
+    background: #d0e7ff;
+  }
+  .calendar-date.current-date {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  .calendar-date.has-note {
+    border: 2px solid #28a745;
+  }
+  #calendarNotesContainer {
+    background: #f1f3f5;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+  }
+  #calendarNotes {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 8px;
+  }
+  #notifications {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 10px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<script>
+  // Global variables for calendar state
+  let currentYear, currentMonth, notes = {};
+
+  // Landing page
+  function createLandingPage() {
+    document.body.innerHTML = `
+    <div class="landing-container">
+        <h1>Welcome to the Doctor's Portal</h1>
+        <button id="signInBtn">Sign In as Doctor</button>
+        <button id="signUpBtn">Sign Up as Doctor</button>
+        <div class="welcome-message">Welcome! Your health is our priority.</div>
+        <div class="quote">"The art of medicine consists of amusing the patient while nature cures the disease." - Voltaire</div>
+    </div>
+    `;
+    setTimeout(() => {
+      const signInBtn = document.getElementById('signInBtn');
+      const signUpBtn = document.getElementById('signUpBtn');
+      if (signInBtn) signInBtn.onclick = createSignInForm;
+      if (signUpBtn) signUpBtn.onclick = createSignUpForm;
+    }, 0);
+  }
+
+  // Sign-up form with multi-step
+  function createSignUpForm() {
+    document.body.innerHTML = `
+    <div class="login-container">
+      <div id="backArrow" title="Back">&#8592;</div>
+      <h2>Sign Up</h2>
+      <form id="signUpForm">
+        <div id="step1">
+          <label>Full Name: <input type="text" id="fullName" required></label>
+          <label>Email ID: <input type="email" id="email" required></label>
+          <label>Specialization:
+            <select id="specialization" required>
+              <option value="" disabled selected>Select your specialty</option>
+              <option value="General Practitioner">General Practitioner</option>
+              <option value="Cardiologist">Cardiologist</option>
+              <option value="Dermatologist">Dermatologist</option>
+              <option value="Neurologist">Neurologist</option>
+              <option value="Pediatrician">Pediatrician</option>
+              <option value="Psychiatrist">Psychiatrist</option>
+              <option value="Radiologist">Radiologist</option>
+              <option value="Surgeon">Surgeon</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <button type="button" id="nextBtn">Next</button>
+        </div>
+        <div id="step2" style="display:none;">
+          <label>Available Timings: <input type="text" id="availableTimings" required></label>
+          <label>Max Appointments Per Day: <input type="number" id="maxAppointments" required></label>
+          <label>Date of Birth: <input type="date" id="dob" required></label>
+          <label>Password: <input type="password" id="password" required></label>
+          <label>Confirm Password: <input type="password" id="confirmPassword" required></label>
+          <button type="button" id="backBtn">Back</button>
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+    </div>
+    `;
+    document.getElementById('backArrow').onclick = createLandingPage;
+    document.getElementById('nextBtn').onclick = () => {
+      if (validateStep1()) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+      }
+    };
+    document.getElementById('backBtn').onclick = () => {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+    };
+    document.getElementById('signUpForm').onsubmit = (e) => {
+      e.preventDefault();
+      signUp();
+    };
+  }
+
+  function validateStep1() {
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const specialization = document.getElementById('specialization').value;
+    if (!fullName) { alert("Please enter your full name."); return false; }
+    if (!email) { alert("Please enter your email."); return false; }
+    if (!specialization) { alert("Please select your specialization."); return false; }
+    return true;
+  }
+
+  function signUp() {
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const specialization = document.getElementById('specialization').value;
+    const availableTimings = document.getElementById('availableTimings').value;
+    const maxAppointments = document.getElementById('maxAppointments').value;
+    const dob = document.getElementById('dob').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    if (password !== confirmPassword) { alert("Passwords do not match!"); return; }
+    if (!isStrongPassword(password)) {
+      alert("Password is too weak! It must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      return;
+    }
+    const doctorData = { fullName, email, specialization, availableTimings, maxAppointments, dob, password };
+    localStorage.setItem(email, JSON.stringify(doctorData));
+    alert("Sign Up Successful! Welcome, " + fullName + "! You can now Sign In.");
+    createLandingPage();
+  }
+
+  function isStrongPassword(password) {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
+    return strongPasswordRegex.test(password);
+  }
+
+  // Sign-in form
+  function createSignInForm() {
+    document.body.innerHTML = `
+      <div class="container">
+        <div id="backArrow" title="Back">&#8592;</div>
+        <h2>Sign In</h2>
+        <form id="signInForm">
+          <label>Email: <input type="email" id="signInEmail" required></label>
+          <label>Password: <input type="password" id="signInPassword" required></label>
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+    `;
+    document.getElementById('backArrow').onclick = createLandingPage;
+    document.getElementById('signInForm').onsubmit = (e) => {
+      e.preventDefault();
+      signIn();
+    };
+  }
+
+  function signIn() {
+    const email = document.getElementById('signInEmail').value;
+    const password = document.getElementById('signInPassword').value;
+    const doctorData = JSON.parse(localStorage.getItem(email));
+    if (doctorData && doctorData.password === password) {
+      createDoctorDashboard(doctorData);
+    } else {
+      alert("Invalid credentials. Please try again.");
+    }
+  }
+
+  // Doctor dashboard
+  function createDoctorDashboard(doctorData) {
+    document.body.innerHTML = `
+      <div class="dashboard-container">
+        <div id="backArrow" title="Back">&#8592;</div>
+        <div class="main-content">
+          <h2>Welcome, ${doctorData.fullName}</h2>
+          <section class="appointments-section">
+            <h3>Your Appointments</h3>
+            <table class="appointments-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Age</th>
+                  <th>Problem</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsList"></tbody>
+            </table>
+            <div id="patientDetailsSection" style="display:none; margin-top: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
+              <h4>Patient Details</h4>
+              <label>Symptoms:</label>
+              <textarea id="symptomsInput" rows="3" style="width: 100%;"></textarea>
+              <label>Prescription:</label>
+              <textarea id="prescriptionInput" rows="3" style="width: 100%;"></textarea>
+              <h4>Report Entry</h4>
+              <label>Diagnostic Lab Report:</label>
+              <textarea id="diagnosticLabReportInput" rows="3" style="width: 100%;"></textarea>
+              <label>Laboratory Report:</label>
+              <textarea id="laboratoryReportInput" rows="3" style="width: 100%;"></textarea>
+              <h4>Review Schedule</h4>
+              <textarea id="reviewScheduleInput" rows="3" style="width: 100%;"></textarea>
+              <div id="paymentSection" style="margin-top: 20px;">
+                <h4>Payment</h4>
+                <label>Amount:</label>
+                <input type="number" id="paymentAmount" style="width: 100%; padding: 8px; margin-bottom: 10px;" />
+                <label>Payment Mode:</label>
+                <select id="paymentMode" style="width: 100%; padding: 8px;">
+                  <option value="" disabled selected>Select payment mode</option>
+                  <option value="cash">Cash</option>
+                  <option value="upi">UPI</option>
+                  <option value="card">Card</option>
+                </select>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="profile-section">
+          <h3>Profile</h3>
+          <div class="profile-picture-container">
+            <img id="profilePicture" src="https://via.placeholder.com/150" alt="Profile Picture" />
+            <input type="file" id="profilePictureInput" accept="image/*" style="display:none;" />
+            <button id="uploadPictureBtn">Upload Picture</button>
+          </div>
+          <p><strong>Name:</strong> ${doctorData.fullName}</p>
+          <p><strong>Specialization:</strong> ${doctorData.specialization}</p>
+          <section class="notifications-section">
+            <h3>Notifications</h3>
+            <div id="notifications">
+              <p>Hospital will be closed on Sunday.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    `;
+    document.getElementById('backArrow').onclick = createLandingPage;
+
+    // Mock appointments data
+    const appointments = [
+      { name: "Patient A", age: 30, problem: "Flu" },
+      { name: "Patient B", age: 45, problem: "Back Pain" },
+      { name: "Patient C", age: 29, problem: "Allergy" }
+    ];
+    const appointmentsList = document.getElementById('appointmentsList');
+    appointments.forEach(app => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${app.name}</td><td>${app.age}</td><td>${app.problem}</td>`;
+      tr.style.cursor = 'pointer';
+      tr.onclick = () => {
+        document.getElementById('patientDetailsSection').style.display = 'block';
+      };
+      appointmentsList.appendChild(tr);
+    });
+
+    // Profile picture upload logic
+    const profilePictureInput = document.getElementById('profilePictureInput');
+    const profilePicture = document.getElementById('profilePicture');
+    const uploadPictureBtn = document.getElementById('uploadPictureBtn');
+    uploadPictureBtn.onclick = () => profilePictureInput.click();
+    profilePictureInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          profilePicture.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  }
+
+  // Calendar rendering
+  function renderCalendar(year, month, notes) {
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDay = firstDay.getDay();
+    const totalDays = lastDay.getDate();
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'calendar-header';
+    header.textContent = `${monthNames[month]} ${year}`;
+    calendar.appendChild(header);
+
+    // Days of week
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const daysRow = document.createElement('div');
+    daysRow.className = 'calendar-days-row';
+    daysOfWeek.forEach(day => {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'calendar-day-name';
+      dayDiv.textContent = day;
+      daysRow.appendChild(dayDiv);
+    });
+    calendar.appendChild(daysRow);
+
+    // Dates grid
+    const datesGrid = document.createElement('div');
+    datesGrid.className = 'calendar-dates-grid';
+
+    // Empty slots before first day
+    for (let i = 0; i < startDay; i++) {
+      const emptySlot = document.createElement('div');
+      emptySlot.className = 'calendar-date empty';
+      datesGrid.appendChild(emptySlot);
+    }
+
+    // Dates
+    for (let date = 1; date <= totalDays; date++) {
+      const dateDiv = document.createElement('div');
+      dateDiv.className = 'calendar-date';
+      dateDiv.textContent = date;
+
+      const dateKey = `${year}-${month + 1}-${date}`;
+      if (notes[dateKey]) {
+        dateDiv.classList.add('has-note');
+      }
+
+      // Highlight current date
+      const today = new Date();
+      if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+        dateDiv.classList.add('current-date');
+      }
+
+      dateDiv.onclick = () => {
+        showNotesForDate(dateKey);
+      };
+
+      datesGrid.appendChild(dateDiv);
+    }
+
+    calendar.appendChild(datesGrid);
+  }
+
+  // Show notes for selected date
+  function showNotesForDate(dateKey) {
+    const note = prompt("Enter notes for " + dateKey + ":", notes[dateKey] || "");
+    if (note !== null) {
+      notes[dateKey] = note;
+      localStorage.setItem('calendarNotes', JSON.stringify(notes));
+      renderCalendar(currentYear, currentMonth, notes);
+    }
+  }
+
+  // Start app
+  createLandingPage();
+</script>
+</body>
+</html>
