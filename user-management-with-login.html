@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .page { display: none; }
+        .page.active { display: block; }
+        form > div { margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">User Management System</h1>
+        
+        <div id="notification" class="fixed top-4 right-4 p-4 rounded-lg shadow-lg hidden"></div>
+        
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div>
+                        <label for="login-username" class="block mb-1">Username</label>
+                        <input type="text" id="login-username" name="username" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="login-password" class="block mb-1">Password</label>
+                        <input type="password" id="login-password" name="password" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                            Login
+                        </button>
+                        <button type="button" onclick="showLoginPage('signup')" 
+                                class="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                            Sign Up
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Signup Page -->
+        <div id="signup-page" class="page">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-center mb-6">Sign Up</h2>
+                <form id="signup-form" onsubmit="handleSignup(event)">
+                    <div>
+                        <label for="signup-username" class="block mb-1">Username</label>
+                        <input type="text" id="signup-username" name="username" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="signup-email" class="block mb-1">Email</label>
+                        <input type="email" id="signup-email" name="email" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="signup-password" class="block mb-1">Password</label>
+                        <input type="password" id="signup-password" name="password" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                            Sign Up
+                        </button>
+                        <button type="button" onclick="showLoginPage('login')" 
+                                class="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Back to Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main App (Users, Add, Edit, View) -->
+        <div id="main-app" class="hidden">
+            <nav class="flex gap-4 mb-8">
+                <button onclick="showPage('users')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    View Users
+                </button>
+                <button onclick="showPage('add')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    Add User
+                </button>
+                <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Logout
+                </button>
+            </nav>
+
+            <!-- Users Page -->
+            <div id="users-page" class="page active">
+                <h2 class="text-2xl font-semibold mb-4">User List</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">ID</th>
+                                <th class="py-2 px-4 border-b">Name</th>
+                                <th class="py-2 px-4 border-b">Email</th>
+                                <th class="py-2 px-4 border-b">Age</th>
+                                <th class="py-2 px-4 border-b">Occupation</th>
+                                <th class="py-2 px-4 border-b">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add User Page -->
+            <div id="add-page" class="page">
+                <h2 class="text-2xl font-semibold mb-4">Add New User</h2>
+                <form id="add-user-form" onsubmit="addUser(event)">
+                    <div>
+                        <label for="id" class="block mb-1">ID</label>
+                        <input type="number" id="id" name="id" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="name" class="block mb-1">Name</label>
+                        <input type="text" id="name" name="name" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block mb-1">Email</label>
+                        <input type="email" id="email" name="email" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="age" class="block mb-1">Age</label>
+                        <input type="number" id="age" name="age" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="occupation" class="block mb-1">Occupation</label>
+                        <input type="text" id="occupation" name="occupation" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                            Add User
+                        </button>
+                        <button type="button" onclick="showPage('users')" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Edit User Page -->
+            <div id="edit-page" class="page">
+                <h2 class="text-2xl font-semibold mb-4">Edit User</h2>
+                <form id="edit-user-form" onsubmit="updateUser(event)">
+                    <input type="hidden" id="edit-id" name="id">
+                    <div>
+                        <label for="edit-name" class="block mb-1">Name</label>
+                        <input type="text" id="edit-name" name="name" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="edit-email" class="block mb-1">Email</label>
+                        <input type="email" id="edit-email" name="email" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="edit-age" class="block mb-1">Age</label>
+                        <input type="number" id="edit-age" name="age" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="edit-occupation" class="block mb-1">Occupation</label>
+                        <input type="text" id="edit-occupation" name="occupation" 
+                               class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                            Update User
+                        </button>
+                        <button type="button" onclick="showPage('users')" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- User Detail Page -->
+            <div id="view-page" class="page">
+                <h2 class="text-2xl font-semibold mb-4">User Details</h2>
+                <div id="user-details" class="p-4 border rounded-lg bg-gray-50">
+                    <!-- User details will be inserted here -->
+                </div>
+                <button onclick="showPage('users')" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    Back to Users
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock database for users
+        let usersDB = {
+            1: { id: 1, name: "John Doe", email: "john@example.com", age: 30, occupation: "Developer" },
+            2: { id: 2, name: "Jane Smith", email: "jane@example.com", age: 28, occupation: "Designer" },
+            3: { id: 3, name: "Bob Johnson", email: "bob@example.com", age: 35, occupation: "Manager" }
+        };
+        
+        // Mock database for login credentials
+        let loginDB = {
+            "admin": { email: "admin@example.com", password: "admin123" }
+        };
+        
+        // Current logged in user
+        let currentUser = null;
+        
+        // Notification system
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${isError ? 'bg-red-500' : 'bg-green-500'} text-white`;
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+        
+        // Page navigation for login/signup
+        function showLoginPage(pageId) {
+            document.querySelectorAll('#login-page, #signup-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageId}-page`).classList.add('active');
+        }
+        
+        // Page navigation for main app
+        function showPage(pageId) {
+            document.querySelectorAll('#main-app .page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            if (pageId === 'users') {
+                loadUsers();
+            }
+        }
+        
+        // Login/Signup handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Check if user exists and password matches
+            if (loginDB[username] && loginDB[username].password === password) {
+                currentUser = username;
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('login-page').classList.remove('active');
+                showPage('users');
+                showNotification('Login successful');
+            } else {
+                showNotification('Invalid username or password', true);
+            }
+        }
+        
+        function handleSignup(event) {
+            event.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Check if username already exists
+            if (loginDB[username]) {
+                showNotification('Username already exists', true);
+                return;
+            }
+            
+            // Add new user to login database
+            loginDB[username] = { email, password };
+            showNotification('Signup successful! Please login.');
+            showLoginPage('login');
+        }
+        
+        function logout() {
+            currentUser = null;
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-page').classList.add('active');
+            document.getElementById('login-form').reset();
+            showNotification('Logged out successfully');
+        }
+        
+        // CRUD Operations for user management
+        function loadUsers() {
+            // Add artificial delay to simulate API call
+            setTimeout(() => {
+                const tbody = document.getElementById('users-table-body');
+                tbody.innerHTML = '';
+                
+                Object.values(usersDB).forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="py-2 px-4 border-b">${user.id}</td>
+                        <td class="py-2 px-4 border-b">${user.name}</td>
+                        <td class="py-2 px-4 border-b">${user.email}</td>
+                        <td class="py-2 px-4 border-b">${user.age}</td>
+                        <td class="py-2 px-4 border-b">${user.occupation}</td>
+                        <td class="py-2 px-4 border-b">
+                            <button onclick="editUser(${user.id})" class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2">
+                                Edit
+                            </button>
+                            <button onclick="viewUser(${user.id})" class="px-2 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 mr-2">
+                                View
+                            </button>
+                            <button onclick="deleteUser(${user.id})" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }, 500);
+        }
+        
+        function addUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const user = {
+                id: parseInt(form.id.value),
+                name: form.name.value,
+                email: form.email.value,
+                age: parseInt(form.age.value),
+                occupation: form.occupation.value
+            };
+            
+            // Validate
+            if (!user.name || !user.email || isNaN(user.age)) {
+                showNotification('Please fill all fields correctly', true);
+                return;
+            }
+            
+            // Check if user ID exists
+            if (usersDB[user.id]) {
+                showNotification('User with this ID already exists', true);
+                return;
+            }
+            
+            // Simulate API delay
+            setTimeout(() => {
+                usersDB[user.id] = user;
+                showNotification('User added successfully');
+                form.reset();
+                showPage('users');
+            }, 500);
+        }
+        
+        function editUser(id) {
+            const user = usersDB[id];
+            if (!user) {
+                showNotification('User not found', true);
+                return;
+            }
+            
+            document.getElementById('edit-id').value = user.id;
+            document.getElementById('edit-name').value = user.name;
+            document.getElementById('edit-email').value = user.email;
+            document.getElementById('edit-age').value = user.age;
+            document.getElementById('edit-occupation').value = user.occupation;
+            
+            showPage('edit');
+        }
+        
+        function viewUser(id) {
+            const user = usersDB[id];
+            if (!user) {
+                showNotification('User not found', true);
+                return;
+            }
+            
+            const detailDiv = document.getElementById('user-details');
+            detailDiv.innerHTML = `
+                <p><strong>ID:</strong> ${user.id}</p>
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Age:</strong> ${user.age}</p>
+                <p><strong>Occupation:</strong> ${user.occupation}</p>
+            `;
+            
+            showPage('view');
+        }
+        
+        function updateUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const user = {
+                id: parseInt(form.id.value),
+                name: form.name.value,
+                email: form.email.value,
+                age: parseInt(form.age.value),
+                occupation: form.occupation.value
+            };
+            
+            // Validate
+            if (!user.name || !user.email || isNaN(user.age)) {
+                showNotification('Please fill all fields correctly', true);
+                return;
+            }
+            
+            // Check if user exists
+            if (!usersDB[user.id]) {
+                showNotification('User not found', true);
+                return;
+            }
+            
+            // Simulate API delay
+            setTimeout(() => {
+                usersDB[user.id] = user;
+                showNotification('User updated successfully');
+                showPage('users');
+            }, 500);
+        }
+        
+        function deleteUser(id) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+            
+            // Check if user exists
+            if (!usersDB[id]) {
+                showNotification('User not found', true);
+                return;
+            }
+            
+            // Simulate API delay
+            setTimeout(() => {
+                delete usersDB[id];
+                showNotification('User deleted successfully');
+                loadUsers();
+            }, 500);
+        }
+        
+        // Load initial data
+        loadUsers();
+    </script>
+</body>
+</html>
