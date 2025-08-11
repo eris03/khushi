@@ -1,52 +1,88 @@
-# Frontend React App
+# Backend API Documentation
 
-## Setup and Run
+## Overview
+This backend is built with FastAPI and provides RESTful API endpoints for user management and UPI payment integration.
 
-1. Install dependencies:
-```bash
-npm install
-```
+## User Management Endpoints
 
-2. Start the development server:
-```bash
-npm start
-```
+- **GET /users/**  
+  Retrieve a list of all users.
 
-The app will be available at http://localhost:3000
+- **GET /users/{user_id}**  
+  Retrieve details of a specific user by ID.
 
-# Backend FastAPI App
+- **POST /users/**  
+  Create a new user.  
+  Request body:  
+  ```json
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "age": 25,
+    "occupation": "Engineer"
+  }
+  ```
 
-## Setup and Run
+- **PUT /users/{user_id}**  
+  Update an existing user by ID.  
+  Request body same as POST.
 
-1. Create a virtual environment (optional but recommended):
-```bash
-python -m venv venv
-```
+- **DELETE /users/{user_id}**  
+  Delete a user by ID.
 
-2. Activate the virtual environment:
-- On Windows:
-```bash
-venv\\Scripts\\activate
-```
-- On macOS/Linux:
-```bash
-source venv/bin/activate
-```
+## UPI Payment Integration Endpoints
 
-3. Install dependencies:
-```bash
-pip install fastapi uvicorn
-```
+- **POST /upi/payment**  
+  Initiate a UPI payment.  
+  Request body:  
+  ```json
+  {
+    "payer_vpa": "payer@upi",
+    "payee_vpa": "payee@upi",
+    "amount": 100.50,
+    "transaction_note": "Payment for services"
+  }
+  ```  
+  Response:  
+  ```json
+  {
+    "transaction_id": "TXN000001",
+    "status": "PENDING",
+    "message": "Payment initiated successfully"
+  }
+  ```
 
-4. Run the FastAPI server:
-```bash
-uvicorn backend.main:app --reload
-```
+- **GET /upi/status/{transaction_id}**  
+  Get the status of a UPI payment transaction.  
+  Response:  
+  ```json
+  {
+    "transaction_id": "TXN000001",
+    "status": "PENDING",
+    "message": "Transaction status retrieved successfully"
+  }
+  ```
 
-The backend API will be available at http://localhost:8000
+## Swagger UI
+
+The API documentation is automatically generated and available at:  
+`http://localhost:8000/docs`
+
+This includes all user management and UPI payment endpoints with request/response schemas.
+
+## Running the Backend
+
+1. Install dependencies:  
+   `pip install -r requirements.txt`
+
+2. Start the server:  
+   `uvicorn backend.main:app --reload`
+
+3. Access API docs at:  
+   `http://localhost:8000/docs`
 
 ## Notes
 
-- The frontend React app expects the backend API to be running on http://localhost:8000
-- The login page uses a simple hardcoded username/password (admin/password) for demonstration.
-- The user management page allows full CRUD operations on users.
+- The UPI payment endpoints are mock implementations for demonstration.
+- The user data is stored in a SQLite database located at `backend/db/users.db`.
